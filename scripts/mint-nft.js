@@ -7,21 +7,24 @@ const { createAlchemyWeb3 } = require("@alch/alchemy-web3")
 const web3 = createAlchemyWeb3(API_URL)
 const contract = require("../artifacts/contracts/MyNFT.sol/MyNFT.json")
 
-const contractAddress = "0x480edcb0cda9297ca7db0a8fddbdf5765d089b6e"
+const contractAddress = "0x0d8894eDaE976Fe87f6b30b172524c34390341Af"
 
 const nftContract = new web3.eth.Contract(contract.abi, contractAddress)
 
-async function mintNFT(tokenURI) {
-	const nonce = await web3.eth.getTransactionCount(PUBLIC_KEY, "latest") //get latest nonce
+async function mintNFT(walletAddress, tokenURI) {
+	
+	const balance = await web3.eth.get
+
+	const nonce = await web3.eth.getTransactionCount(walletAddress, "latest") //get latest nonce
 	console.log("nonce: ", nonce)
 
 	//the transaction
 	const tx = {
-		from: PUBLIC_KEY,
+		from: walletAddress,
 		to: contractAddress,
 		nonce: nonce,
 		gas: 500000,
-		data: nftContract.methods.mintNFT(PUBLIC_KEY, tokenURI).encodeABI(),
+		data: nftContract.methods.mintNFT(walletAddress, tokenURI).encodeABI(),
 	}
 
 	const signPromise = web3.eth.accounts.signTransaction(tx, PRIVATE_KEY)
@@ -50,4 +53,4 @@ async function mintNFT(tokenURI) {
 		})
 }
 
-mintNFT("ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF")
+mintNFT(PUBLIC_KEY, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF")
