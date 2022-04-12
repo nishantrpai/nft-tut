@@ -21,7 +21,7 @@ contract MyNFT is ERC721URIStorage, Ownable {
         balances[0x5A8064F8249D079f02bfb688f4AA86B6b2C65359] = 2;
     }
 
-    constructor() ERC721("MyNFT", "NFT") {
+    constructor() ERC721("NFT Vault", "NFT") {
         initialize();
     }
 
