@@ -15,4 +15,6 @@ contract GLDToken is ERC20 {
     ) public ERC20(name, symbol) {
         _mint(msg.sender, initialSupply);
     }
+
+    
 }
