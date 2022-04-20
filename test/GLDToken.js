@@ -1,5 +1,4 @@
 const { assert, artifacts, contract, expect } = require("hardhat");
-const { expectEvent } = require('@openzeppelin/test-helpers');
 const Vault = artifacts.require("../contracts/NFTVault.sol");
 const NFT = artifacts.require("../contracts/NFT.sol");
 
