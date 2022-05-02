@@ -628,8 +628,8 @@
       ]
     },
     "/media/nishu/glove/prjs/femme-de-larp-island/contracts/NFTVault.sol": {
-      "lastModificationDate": 1650470849211,
-      "contentHash": "bc0cdc836f1c08b7cc7f02a4b9d89ea4",
+      "lastModificationDate": 1651470713139,
+      "contentHash": "fdff3baeea4961ecccbfe65d08b60f82",
       "sourceName": "contracts/NFTVault.sol",
       "solcConfig": {
         "version": "0.8.1",
@@ -655,11 +655,13 @@
         }
       },
       "imports": [
-        "./GLDToken.sol",
         "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
-        "hardhat/console.sol"
+        "@openzeppelin/contracts/token/ERC721/IERC721.sol",
+        "./GLDToken.sol"
       ],
-      "versionPragmas": [],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
       "artifacts": [
         "NFTVault"
       ]

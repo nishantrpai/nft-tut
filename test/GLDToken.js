@@ -1,21 +1,33 @@
-const { assert, artifacts, contract, expect } = require("hardhat");
+const { assert, artifacts, contract, expect, ethers } = require("hardhat");
+require("dotenv").config(process.cwd(), '.env.local');
+const { API_URL, PRIVATE_KEY, PUBLIC_KEY } = process.env;
+
 const Vault = artifacts.require("../contracts/NFTVault.sol");
 const NFT = artifacts.require("../contracts/NFT.sol");
 
 contract("NFT", function ([creator, other]) {
     contract("NFTVault", () => {
         const TOTAL_SUPPLY = 1000000;
+        const TOKEN_AMOUNT = 100;
+
         it("should create vault", async function () {
-            //create a nft vault
-            console.log('create a vault');
             this.vault = await Vault.new();
+            this.goldAddr = await this.vault.getTokenAddr();
+
+            console.log()
+
+            console.log(creator);
+            const goldArtifact = await artifacts.readArtifact("GLDToken");
+            this.gold = await ethers.getContractAt(goldArtifact.abi, this.goldAddr, ethers.provider);
+
+            assert.equal(await this.gold.totalSupply(), TOTAL_SUPPLY);
+
             assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY);
         });
 
         it("should create a nft token", async function () {
 
             //give creator a nft token
-            console.log('create a nft token');
             this.nftcontract = await NFT.new();
             this.token = await this.nftcontract.mintNFT(creator, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF")
 
@@ -23,9 +35,9 @@ contract("NFT", function ([creator, other]) {
             assert.equal(this.token.logs[0].args.tokenId, 1);
         });
 
-        it("should transfer a nft token", async function () {
-            console.log('transfer nft token');
-            
+        it("should transfer erc20 for nft", async function () {
+            //pre condition
+
             //check vault balance
             assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY);
             assert.equal(await this.vault.getCurrentBalance(), 0);
@@ -38,6 +50,8 @@ contract("NFT", function ([creator, other]) {
             //transfer nft token to vault
             const receipt = await this.nftcontract.safeTransferFrom(creator, this.vault.address, this.token.logs[0].args.tokenId);
 
+            //post condition
+
             // check if vault has token
             assert.equal(await this.nftcontract.balanceOf(creator), 0);
             assert.equal(await this.nftcontract.balanceOf(this.vault.address), 1);
@@ -46,5 +60,47 @@ contract("NFT", function ([creator, other]) {
             assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY - 100);
             assert.equal(await this.vault.getCurrentBalance(), 100);
         });
+
+
+        it("should send nft token for erc20", async function () {
+            let vaultbalance = await this.vault.getVaultBalance();
+            let currentbalance = await this.vault.getCurrentBalance();
+            // let totalSupply = await this.gold.totalSupply();
+            console.log(vaultbalance.toString(10));
+            console.log(currentbalance.toString(10));
+            // console.log(totalSupply.toString(10));
+
+
+
+            //transfer erc20 from creator to vault
+            // need owners approval
+            // await this.token.approve(this.vault.address, 10, { from: creator });
+            // let allowance = await this.gold.allowance(creator, this.vault.address);
+            // console.log(allowance.toString(10));
+            const signer = await ethers.provider.getSigner(creator)
+            await this.gold.connect(signer).approve(this.vault.address, TOKEN_AMOUNT);
+            await this.gold.connect(signer).increaseAllowance(this.vault.address, TOKEN_AMOUNT);
+            await this.vault.receiveToken(this.nftcontract.address, creator, TOKEN_AMOUNT, { from: creator });
+            
+            // console.log(JSON.stringify(approval));
+            vaultbalance = await this.vault.getVaultBalance();
+            currentbalance = await this.vault.getCurrentBalance();
+            console.log(vaultbalance.toString(10));
+            console.log(currentbalance.toString(10));
+
+            // //back to pre conditon
+            assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY);
+            assert.equal(await this.vault.getCurrentBalance(), 0);
+
+            // //check if owner has token
+            assert.equal(await this.nftcontract.balanceOf(creator), 1);
+            assert.equal(await this.nftcontract.balanceOf(this.vault.address), 0);
+
+
+            // //check if owner has token
+            // assert.equal(await this.nftcontract.balanceOf(creator), 1);
+            // assert.equal(await this.nftcontract.balanceOf(this.vault.address), 0);
+        });
+
     })
 })

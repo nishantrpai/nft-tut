@@ -13,8 +13,6 @@ const nftContract = new web3.eth.Contract(contract.abi, contractAddress)
 
 async function mintNFT(walletAddress, tokenURI) {
 	
-	const balance = await web3.eth.get
-
 	const nonce = await web3.eth.getTransactionCount(walletAddress, "latest") //get latest nonce
 	console.log("nonce: ", nonce)
 
