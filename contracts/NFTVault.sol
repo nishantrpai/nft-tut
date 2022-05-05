@@ -8,6 +8,7 @@ import "./GLDToken.sol";
 contract NFTVault is IERC721Receiver {
     GLDToken gold;
     uint256[] public tokenIds;
+    mapping(address => bool) whiteList;
 
     constructor() public {
         gold = new GLDToken("Gold", "GLD", 1000000);
@@ -32,6 +33,10 @@ contract NFTVault is IERC721Receiver {
 
     function getTokenAddr() public view returns (address token) {
         return address(gold);
+    }
+
+    function setWhiteList(address _addr, bool _whiteList) public {
+        whiteList[_addr] = _whiteList;
     }
 
     function receiveToken(
@@ -61,7 +66,7 @@ contract NFTVault is IERC721Receiver {
         uint256 _tokenId,
         bytes memory
     ) public virtual override returns (bytes4) {
-        if (gold.transfer(_from, 100)) {
+        if (gold.transfer(_from, 100) && whiteList[msg.sender]) {
             tokenIds.push(_tokenId);
             return this.onERC721Received.selector;
         }

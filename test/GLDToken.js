@@ -44,6 +44,8 @@ contract("NFT", function ([creator, other]) {
             assert.equal(await this.nftcontract.balanceOf(creator), 1);
             assert.equal(await this.nftcontract.balanceOf(this.vault.address), 0);
 
+            //whitelist address to send, will fail otherwise
+            await this.vault.setWhiteList(this.nftcontract.address, true);
 
             //transfer nft token to vault
             const receipt = await this.nftcontract.safeTransferFrom(creator, this.vault.address, this.token.logs[0].args.tokenId);
