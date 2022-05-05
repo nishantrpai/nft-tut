@@ -1,6 +1,4 @@
 const { assert, artifacts, contract, expect, ethers } = require("hardhat");
-require("dotenv").config(process.cwd(), '.env.local');
-const { API_URL, PRIVATE_KEY, PUBLIC_KEY } = process.env;
 
 const Vault = artifacts.require("../contracts/NFTVault.sol");
 const NFT = artifacts.require("../contracts/NFT.sol");
@@ -78,10 +76,12 @@ contract("NFT", function ([creator, other]) {
             // let allowance = await this.gold.allowance(creator, this.vault.address);
             // console.log(allowance.toString(10));
             const signer = await ethers.provider.getSigner(creator)
-            await this.gold.connect(signer).approve(this.vault.address, TOKEN_AMOUNT);
-            await this.gold.connect(signer).increaseAllowance(this.vault.address, TOKEN_AMOUNT);
+            const tx1 = await this.gold.connect(signer).approve(this.vault.address, TOKEN_AMOUNT);
+            await tx1.wait();
+            const tx2 = await this.gold.connect(signer).increaseAllowance(this.vault.address, TOKEN_AMOUNT);
+            await tx2.wait();
             await this.vault.receiveToken(this.nftcontract.address, creator, TOKEN_AMOUNT, { from: creator });
-            
+
             // console.log(JSON.stringify(approval));
             vaultbalance = await this.vault.getVaultBalance();
             currentbalance = await this.vault.getCurrentBalance();

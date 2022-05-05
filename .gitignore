@@ -1,3 +1,4 @@
 .env
 .env.local
+.env.rinkeby
 node_modules/*

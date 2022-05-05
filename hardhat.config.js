@@ -1,7 +1,7 @@
 /**
 * @type import('hardhat/config').HardhatUserConfig
 */
-require('dotenv').config(process.cwd(), '.env.local');
+require('dotenv').config(process.cwd(), '.env');
 require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-truffle5");
 const { API_URL, PRIVATE_KEY } = process.env;
