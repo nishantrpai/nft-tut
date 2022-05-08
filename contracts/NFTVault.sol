@@ -57,9 +57,10 @@ contract NFTVault is IERC721Receiver {
         public
         returns (bool success)
     {
-        console.log("balance %s", gold.balanceOf(msg.sender));
+        // console.log("balance %s", gold.balanceOf(msg.sender));
         require(gold.balanceOf(msg.sender) != 0, "sender cannot have 0 gold");
-        require(nfts.length > 0, "no nfts added");
+        require(nfts.length > 0, "no more nfts");
+        require(amount == 1, "amount must be 1");
         if (gold.transferFrom(msg.sender, address(this), amount)) {
             // get random nft
             uint256 randomIndex = uint256(
@@ -68,11 +69,11 @@ contract NFTVault is IERC721Receiver {
             uint256 tokenId = nfts[randomIndex].tokenId;
             address contractAddress = nfts[randomIndex].contractAddress;
 
-            console.log("----");
-            console.log("token length %s", nfts.length);
-            console.log("contractaddress %s", contractAddress);
-            console.log("random index %s", randomIndex);
-            console.log("tokenid %s", tokenId);
+            // console.log("----");
+            // console.log("token length %s", nfts.length);
+            // console.log("contractaddress %s", contractAddress);
+            // console.log("random index %s", randomIndex);
+            // console.log("tokenid %s", tokenId);
             IERC721(contractAddress).transferFrom(
                 address(this),
                 msg.sender,
@@ -83,8 +84,8 @@ contract NFTVault is IERC721Receiver {
             nfts[randomIndex] = nfts[nfts.length - 1];
             nfts.pop();
 
-            console.log("token length %s", nfts.length);
-            console.log("----");
+            // console.log("token length %s", nfts.length);
+            // console.log("----");
 
             return true;
         }
@@ -98,7 +99,7 @@ contract NFTVault is IERC721Receiver {
         uint256 _tokenId,
         bytes memory
     ) public virtual override returns (bytes4) {
-        if (gold.transfer(_from, 100) && whiteList[msg.sender]) {
+        if (gold.transfer(_from, 1) && whiteList[msg.sender]) {
             //first time new contract is showing up
             nfts.push(NFT(msg.sender, _tokenId));
             return this.onERC721Received.selector;

@@ -6,7 +6,7 @@ const NFT = artifacts.require("../contracts/NFT.sol");
 contract("NFT", function ([creator, other]) {
     contract("NFTVault", () => {
         const TOTAL_SUPPLY = 1000000;
-        const TOKEN_AMOUNT = 10;
+        const TOKEN_AMOUNT = 1;
 
         it("should create vault", async function () {
             this.vault = await Vault.new();
@@ -82,8 +82,8 @@ contract("NFT", function ([creator, other]) {
             assert.equal(await this.nftcontract2.balanceOf(this.vault.address), this.token2.length);
 
             //check if creator has erc20 tokens
-            assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY - (100 * (this.token.length + this.token2.length)));
-            assert.equal(await this.vault.getCurrentBalance(), 100 * (this.token.length + this.token2.length));
+            assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY - (TOKEN_AMOUNT * (this.token.length + this.token2.length)));
+            assert.equal(await this.vault.getCurrentBalance(), TOKEN_AMOUNT * (this.token.length + this.token2.length));
         });
 
 
@@ -91,13 +91,7 @@ contract("NFT", function ([creator, other]) {
 
             //transfer erc20 from creator to vault
             // need owners approval
-            for (let i = 0; i <= (this.token.length + this.token2.length); i++) {
-                let vaultbalance = await this.vault.getVaultBalance();
-                let currentbalance = await this.vault.getCurrentBalance();
-                // let totalSupply = await this.gold.totalSupply();
-                console.log(vaultbalance.toString(10));
-                console.log(currentbalance.toString(10));
-                // console.log(totalSupply.toString(10));
+            for (let i = 0; i < (this.token.length + this.token2.length); i++) {
                 const signer = await ethers.provider.getSigner(creator)
                 const tx1 = await this.gold.connect(signer).approve(this.vault.address, TOKEN_AMOUNT);
                 await tx1.wait();
@@ -107,18 +101,18 @@ contract("NFT", function ([creator, other]) {
             }
 
             // console.log(JSON.stringify(approval));
-            // vaultbalance = await this.vault.getVaultBalance();
-            // currentbalance = await this.vault.getCurrentBalance();
-            // console.log(vaultbalance.toString(10));
-            // console.log(currentbalance.toString(10));
+            vaultbalance = await this.vault.getVaultBalance();
+            currentbalance = await this.vault.getCurrentBalance();
 
-            // // //back to pre conditon
-            // assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY);
-            // assert.equal(await this.vault.getCurrentBalance(), 0);
+            // //back to pre conditon
+            assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY);
+            assert.equal(await this.vault.getCurrentBalance(), 0);
 
-            // // //check if owner has token
-            // assert.equal(await this.nftcontract.balanceOf(creator), this.token.length);
-            // assert.equal(await this.nftcontract.balanceOf(this.vault.address), 0);
+            // //check if owner has token
+            assert.equal(await this.nftcontract.balanceOf(creator), this.token.length);
+            assert.equal(await this.nftcontract2.balanceOf(creator), this.token2.length);
+            assert.equal(await this.nftcontract.balanceOf(this.vault.address), 0);
+            assert.equal(await this.nftcontract2.balanceOf(this.vault.address), 0);
 
         });
 
