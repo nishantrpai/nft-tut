@@ -14,7 +14,7 @@ contract NFTVault is IERC721Receiver {
     // gold for erc20
     GLDToken gold;
     address payable public owner;
-
+    uint256 public TOKEN_AMOUNT = 100;
     //
     NFT[] nfts;
     mapping(address => uint256[]) public tokens;
@@ -60,7 +60,7 @@ contract NFTVault is IERC721Receiver {
         // console.log("balance %s", gold.balanceOf(msg.sender));
         require(gold.balanceOf(msg.sender) != 0, "sender cannot have 0 gold");
         require(nfts.length > 0, "no more nfts");
-        require(amount == 1, "amount must be 1");
+        require(amount == TOKEN_AMOUNT, "amount must be 100");
         if (gold.transferFrom(msg.sender, address(this), amount)) {
             // get random nft
             uint256 randomIndex = uint256(
@@ -99,7 +99,7 @@ contract NFTVault is IERC721Receiver {
         uint256 _tokenId,
         bytes memory
     ) public virtual override returns (bytes4) {
-        if (gold.transfer(_from, 1) && whiteList[msg.sender]) {
+        if (gold.transfer(_from, TOKEN_AMOUNT) && whiteList[msg.sender]) {
             //first time new contract is showing up
             nfts.push(NFT(msg.sender, _tokenId));
             return this.onERC721Received.selector;

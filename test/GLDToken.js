@@ -6,7 +6,7 @@ const NFT = artifacts.require("../contracts/NFT.sol");
 contract("NFT", function ([creator, other]) {
     contract("NFTVault", () => {
         const TOTAL_SUPPLY = 1000000;
-        const TOKEN_AMOUNT = 1;
+        const TOKEN_AMOUNT = 10;
 
         it("should create vault", async function () {
             this.vault = await Vault.new();
@@ -24,27 +24,23 @@ contract("NFT", function ([creator, other]) {
 
             //give creator a nft token
             this.nftcontract = await NFT.new();
-            this.nftcontract2 = await NFT.new();
+            // this.nftcontract2 = await NFT.new();
 
             this.token = [];
             this.token.push(await this.nftcontract.mintNFT(creator, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF"));
-            this.token.push(await this.nftcontract.mintNFT(creator, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF"));
-            this.token.push(await this.nftcontract.mintNFT(creator, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF"));
 
             this.token2 = [];
-            this.token2.push(await this.nftcontract2.mintNFT(creator, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF"));
-            this.token2.push(await this.nftcontract2.mintNFT(creator, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF"));
-            this.token2.push(await this.nftcontract2.mintNFT(creator, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF"));
+            // this.token2.push(await this.nftcontract2.mintNFT(creator, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF"));
 
             //check if creator has that token
-            assert.equal(this.token[0].logs[0].args.tokenId, 1);
-            assert.equal(this.token[1].logs[0].args.tokenId, 2);
-            assert.equal(this.token[2].logs[0].args.tokenId, 3);
+            for (let i = 0; i < this.token.length; i++) {
+                assert.equal(this.token[i].logs[0].args.tokenId, 1);
+            }
 
             //check if creator has that token
-            assert.equal(this.token2[0].logs[0].args.tokenId, 1);
-            assert.equal(this.token2[1].logs[0].args.tokenId, 2);
-            assert.equal(this.token2[2].logs[0].args.tokenId, 3);
+            for (let i = 0; i < this.token.length; i++) {
+                assert.equal(this.token2[i].logs[0].args.tokenId, 1);
+            }
 
         });
 
@@ -63,14 +59,13 @@ contract("NFT", function ([creator, other]) {
             await this.vault.setWhiteList(this.nftcontract2.address, true);
 
             //transfer nft token to vault
-            await this.nftcontract.safeTransferFrom(creator, this.vault.address, this.token[2].logs[0].args.tokenId);
-            await this.nftcontract.safeTransferFrom(creator, this.vault.address, this.token[1].logs[0].args.tokenId);
-            await this.nftcontract.safeTransferFrom(creator, this.vault.address, this.token[0].logs[0].args.tokenId);
-
+            for (let i = 0; i < this.token.length; i++) {
+                await this.nftcontract.safeTransferFrom(creator, this.vault.address, this.token[i].logs[0].args.tokenId);
+            }
             //transfer nft token to vault
-            await this.nftcontract2.safeTransferFrom(creator, this.vault.address, this.token2[2].logs[0].args.tokenId);
-            await this.nftcontract2.safeTransferFrom(creator, this.vault.address, this.token2[1].logs[0].args.tokenId);
-            await this.nftcontract2.safeTransferFrom(creator, this.vault.address, this.token2[0].logs[0].args.tokenId);
+            for (let i = 0; i < this.token2.length; i++) {
+                await this.nftcontract2.safeTransferFrom(creator, this.vault.address, this.token2[i].logs[0].args.tokenId);
+            }
             //post condition
 
             // check if vault has token
