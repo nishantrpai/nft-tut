@@ -1,43 +1,6 @@
 {
   "_format": "hh-sol-cache-2",
   "files": {
-    "/media/nishu/glove/prjs/femme-de-larp-island/contracts/GLDToken.sol": {
-      "lastModificationDate": 1650458591008,
-      "contentHash": "9035389ff7ddfba2319e2f841ba30286",
-      "sourceName": "contracts/GLDToken.sol",
-      "solcConfig": {
-        "version": "0.8.1",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [
-        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
-      ],
-      "versionPragmas": [
-        "^0.8.0"
-      ],
-      "artifacts": [
-        "GLDToken"
-      ]
-    },
     "/media/nishu/glove/prjs/femme-de-larp-island/node_modules/@openzeppelin/contracts/token/ERC20/ERC20.sol": {
       "lastModificationDate": 1649678432121,
       "contentHash": "bab063ddd80e9cc9e313361fef7ef07f",
@@ -628,8 +591,8 @@
       ]
     },
     "/media/nishu/glove/prjs/femme-de-larp-island/contracts/NFTVault.sol": {
-      "lastModificationDate": 1652010371952,
-      "contentHash": "b60d5be22776a8e43aa510437f022a74",
+      "lastModificationDate": 1652082181010,
+      "contentHash": "7a743145e285238e38d7e2eb3f30dd50",
       "sourceName": "contracts/NFTVault.sol",
       "solcConfig": {
         "version": "0.8.1",
@@ -658,7 +621,7 @@
         "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol",
         "@openzeppelin/contracts/token/ERC721/IERC721.sol",
         "hardhat/console.sol",
-        "./GLDToken.sol"
+        "./KEYToken.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -700,6 +663,43 @@
       ],
       "artifacts": [
         "console"
+      ]
+    },
+    "/media/nishu/glove/prjs/femme-de-larp-island/contracts/KEYToken.sol": {
+      "lastModificationDate": 1652081644330,
+      "contentHash": "f92fe500ccf83cfde4fb346763dc043c",
+      "sourceName": "contracts/KEYToken.sol",
+      "solcConfig": {
+        "version": "0.8.1",
+        "settings": {
+          "optimizer": {
+            "enabled": false,
+            "runs": 200
+          },
+          "outputSelection": {
+            "*": {
+              "*": [
+                "abi",
+                "evm.bytecode",
+                "evm.deployedBytecode",
+                "evm.methodIdentifiers",
+                "metadata"
+              ],
+              "": [
+                "ast"
+              ]
+            }
+          }
+        }
+      },
+      "imports": [
+        "@openzeppelin/contracts/token/ERC20/ERC20.sol"
+      ],
+      "versionPragmas": [
+        "^0.8.0"
+      ],
+      "artifacts": [
+        "KEYToken"
       ]
     }
   }
