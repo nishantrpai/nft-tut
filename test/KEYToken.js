@@ -90,12 +90,12 @@ contract("NFT", function ([creator, other]) {
                 await tx1.wait();
                 const tx2 = await this.keys.connect(signer).increaseAllowance(this.vault.address, TOKEN_AMOUNT);
                 await tx2.wait();
-                await this.vault.receiveToken(creator, TOKEN_AMOUNT);
+                await this.vault.receiveToken(10);
             }
 
             //back to pre conditon
-            assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY);
-            assert.equal(await this.vault.getCurrentBalance(), 0);
+            assert.equal(await this.vault.getVaultBalance(), TOTAL_SUPPLY - 90);
+            assert.equal(await this.vault.getCurrentBalance(), 90);
 
             // //check if owner has token
             assert.equal(await this.nftcontract.balanceOf(creator), this.token.length);
