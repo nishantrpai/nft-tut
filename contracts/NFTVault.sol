@@ -6,16 +6,26 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "./KEYToken.sol";
 
 contract NFTVault is IERC721Receiver {
+
+    // custom data type for holding contract address and token id
     struct NFT {
         address contractAddress;
         uint256 tokenId;
     }
 
+    // ERC20 token that'll be used for transactions
     KEYToken keys;
-    address payable public owner;
+    
+    // OWNER of the vault, will have access to backdoor and whitelisting
+    address payable owner;
+    
+    // Amount that is sent when a ERC721 token is received
     uint256 public TOKEN_AMOUNT = 100;
+    
+    // List of ERC721 address and tokenid that are currently in the smart contract
     NFT[] nfts;
-    mapping(address => uint256[]) public tokens;
+    
+    // ERC721 addresses that are to be whitelisted
     mapping(address => bool) whiteList;
 
    
