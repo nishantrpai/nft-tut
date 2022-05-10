@@ -11,8 +11,23 @@ contract NFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
+    /**
+     * @dev
+     * Emitted when this ERC721 contract is deployed
+     *
+     * NOTE: This contract is only for test purposes
+     */
+
     constructor() ERC721("NFT", "NFT") {}
 
+    /**
+     * @dev
+     * Emitted when new ERC721 token needs to be minted
+     *
+     * Requirements:
+     * - receipient: Wallet address where you want to send ERC721 token
+     * - tokenURI: IPFS URL that the token will point to
+     */
     function mintNFT(address recipient, string memory tokenURI)
         public
         onlyOwner
