@@ -3,10 +3,13 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
+import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
+import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
+import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
+import "@openzeppelin/contracts/access/AccessControl.sol";
 import "./KEYToken.sol";
 
-contract NFTVault is IERC721Receiver {
-
+contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     // custom data type for holding contract address and token id
     struct NFT {
         address contractAddress;
@@ -15,20 +18,19 @@ contract NFTVault is IERC721Receiver {
 
     // ERC20 token that'll be used for transactions
     KEYToken keys;
-    
+
     // OWNER of the vault, will have access to backdoor and whitelisting
     address payable owner;
-    
+
     // Amount that is sent when a ERC721 token is received
     uint256 public TOKEN_AMOUNT = 100;
-    
+
     // List of ERC721 address and tokenid that are currently in the smart contract
     NFT[] nfts;
-    
+
     // ERC721 addresses that are to be whitelisted
     mapping(address => bool) whiteList;
 
-   
     /**
      * @dev Emitted when this contract is deployed
      */
@@ -75,16 +77,13 @@ contract NFTVault is IERC721Receiver {
      *
      * Requirements:
      * - amount: Amount that is being sent to the smart contract
-     * 
+     *
      * Transfer amount from sender to this contract and a random ERC721 from this contract if:
      * 1. Wallet should have > 0 keys, will fail if there are no keys
      * 2. NFTs in the this contract should be > 0, will fail if there are no NFTs
      * 3. Amount that is being sent to the smart should be exactly 10, will failif the amount is not equal to 10
      */
-    function receiveToken(uint256 amount)
-        public
-        returns (bool success)
-    {
+    function receiveToken(uint256 amount) public returns (bool success) {
         require(keys.balanceOf(msg.sender) != 0, "sender cannot have 0 keys");
         require(nfts.length > 0, "there are no NFTs in the contract");
         require(amount == 10, "amount must be 10");
@@ -110,13 +109,12 @@ contract NFTVault is IERC721Receiver {
         return false;
     }
 
-
     /**
      * @dev Owner can use this function for preventing NFTs from getting locked in this contract
-     * 
+     *
      * Requirements:
      * -contractAddress: Contract address of NFT
-     * -tokenId: TokenID of NFT 
+     * -tokenId: TokenID of NFT
      */
 
     function backDoor(address contractAddress, uint256 tokenId) public {
@@ -138,7 +136,7 @@ contract NFTVault is IERC721Receiver {
      * memory:
      *
      * If the ERC721 contract is whitelisted and keys are sent to _from:
-     * Token ID and contract address of ERC721 token are saved for receiveToken and backDoor 
+     * Token ID and contract address of ERC721 token are saved for receiveToken and backDoor
      */
     function onERC721Received(
         address _operator,
@@ -150,5 +148,37 @@ contract NFTVault is IERC721Receiver {
             nfts.push(NFT(msg.sender, _tokenId));
             return this.onERC721Received.selector;
         }
+    }
+
+    /**
+     * @dev Emitted when ERC1155 token is received (must be included for receiving ERC1155 tokens)
+     *
+     * Requirements:
+     * _operator: ERC721 contract address
+     * _from: Wallet that sent the NFT
+     * _tokenId:
+     * memory:
+     *
+     * If the ERC1155 contract is whitelisted and keys are sent to _from:
+     * Token ID and contract address of ERC721 token are saved for receiveToken and backDoor
+     */
+    function onERC1155Received(
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes calldata data
+    ) public virtual override returns (bytes4) {
+        return this.onERC1155Received.selector;
+    }
+
+    function onERC1155BatchReceived(
+        address operator,
+        address from,
+        uint256[] calldata ids,
+        uint256[] calldata values,
+        bytes calldata data
+    ) public virtual override returns (bytes4) {
+        return this.onERC1155BatchReceived.selector;
     }
 }
