@@ -86,7 +86,11 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * 2. NFTs in the this contract should be > 0, will fail if there are no NFTs
      * 3. Amount that is being sent to the smart should be exactly 10, will failif the amount is not equal to 10
      */
-    function receiveToken(uint256 amount) public returns (bool success) {
+    function receiveToken(uint256 amount)
+        public
+        payable
+        returns (bool success)
+    {
         require(keys.balanceOf(msg.sender) != 0, "sender cannot have 0 keys");
         require(nfts.length > 0, "there are no NFTs in the contract");
         require(amount >= 10, "amount must be atleast 10");
