@@ -89,7 +89,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     function receiveToken(uint256 amount) public returns (bool success) {
         require(keys.balanceOf(msg.sender) != 0, "sender cannot have 0 keys");
         require(nfts.length > 0, "there are no NFTs in the contract");
-        require(amount == 10, "amount must be 10");
+        require(amount >= 10, "amount must be atleast 10");
         if (keys.transferFrom(msg.sender, address(this), amount)) {
             uint256 randomIndex = uint256(
                 keccak256(abi.encodePacked(block.difficulty, msg.sender))
