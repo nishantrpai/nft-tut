@@ -12,8 +12,11 @@ import "./KEYToken.sol";
 contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     // custom data type for holding contract address and token id
     struct NFT {
+        string tokenType;
         address contractAddress;
         uint256 tokenId;
+        uint256 _id; //ERC1155 id
+        uint256 _value; //ERC1155 value
     }
 
     // ERC20 token that'll be used for transactions
@@ -29,7 +32,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     NFT[] nfts;
 
     // ERC721 addresses that are to be whitelisted
-    mapping(address => bool) whiteList;
+    mapping(address => bool) public whiteList;
 
     /**
      * @dev Emitted when this contract is deployed
@@ -94,11 +97,24 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
             uint256 tokenId = nfts[randomIndex].tokenId;
             address contractAddress = nfts[randomIndex].contractAddress;
 
-            IERC721(contractAddress).transferFrom(
-                address(this),
-                msg.sender,
-                tokenId
-            );
+            if (
+                keccak256(bytes(nfts[randomIndex].tokenType)) ==
+                keccak256(bytes("ERC721"))
+            ) {
+                IERC721(contractAddress).safeTransferFrom(
+                    address(this),
+                    msg.sender,
+                    tokenId
+                );
+            } else {
+                IERC1155(contractAddress).safeTransferFrom(
+                    address(this),
+                    msg.sender,
+                    nfts[randomIndex]._id,
+                    nfts[randomIndex]._value,
+                    "0x0"
+                );
+            }
 
             require(randomIndex < nfts.length);
             nfts[randomIndex] = nfts[nfts.length - 1];
@@ -117,12 +133,27 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * -tokenId: TokenID of NFT
      */
 
-    function backDoor(address contractAddress, uint256 tokenId) public {
+    function backDoorERC721(address contractAddress, uint256 tokenId) public {
         require(msg.sender == owner, "You are not the owner");
-        IERC721(contractAddress).transferFrom(
+        IERC721(contractAddress).safeTransferFrom(
             address(this),
             msg.sender,
             tokenId
+        );
+    }
+
+    function backDoorERC1155(
+        address contractAddress,
+        uint256 _id,
+        uint256 _value
+    ) public {
+        require(msg.sender == owner, "You are not the owner");
+        IERC1155(contractAddress).safeTransferFrom(
+            address(this),
+            msg.sender,
+            _id,
+            _value,
+            "0x0"
         );
     }
 
@@ -145,7 +176,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         bytes memory
     ) public virtual override returns (bytes4) {
         if (keys.transfer(_from, TOKEN_AMOUNT) && whiteList[msg.sender]) {
-            nfts.push(NFT(msg.sender, _tokenId));
+            nfts.push(NFT("ERC721", msg.sender, _tokenId, 0, 0));
             return this.onERC721Received.selector;
         }
     }
@@ -163,22 +194,31 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * Token ID and contract address of ERC721 token are saved for receiveToken and backDoor
      */
     function onERC1155Received(
-        address operator,
-        address from,
-        uint256 id,
-        uint256 value,
-        bytes calldata data
+        address _operator,
+        address _from,
+        uint256 _id,
+        uint256 _value,
+        bytes calldata _data
     ) public virtual override returns (bytes4) {
-        return this.onERC1155Received.selector;
+        if (keys.transfer(_from, TOKEN_AMOUNT) && whiteList[msg.sender]) {
+            nfts.push(NFT("ERC1155", msg.sender, 0, _id, _value));
+            return this.onERC1155Received.selector;
+        }
     }
 
     function onERC1155BatchReceived(
-        address operator,
-        address from,
-        uint256[] calldata ids,
-        uint256[] calldata values,
-        bytes calldata data
+        address _operator,
+        address _from,
+        uint256[] calldata _ids,
+        uint256[] calldata _values,
+        bytes calldata _data
     ) public virtual override returns (bytes4) {
-        return this.onERC1155BatchReceived.selector;
+        if (whiteList[msg.sender]) {
+            keys.transfer(_from, TOKEN_AMOUNT * _ids.length);
+            for (uint256 i = 0; i < _ids.length; i++) {
+                nfts.push(NFT("ERC1155", msg.sender, 0, _ids[i], _values[i]));
+            }
+            return this.onERC1155BatchReceived.selector;
+        }
     }
 }
