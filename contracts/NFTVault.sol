@@ -61,7 +61,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     {
         if (IERC721(addr).supportsInterface(0x80ac58cd)) return "ERC721";
         if (IERC1155(addr).supportsInterface(0xd9b67a26)) return "ERC1155";
-        return "idk";
+        return "unknown";
     }
 
     /**
