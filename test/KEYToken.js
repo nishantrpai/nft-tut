@@ -11,7 +11,7 @@ contract("NFTVault", ([creator, other]) => {
     it("should create vault", async function () {
         this.vault = await Vault.new();
         this.keyAddr = await this.vault.getTokenAddr();
-        
+
         // transfer test cases will fall if set to false
         await this.vault.setWhiteList(creator, true);
 

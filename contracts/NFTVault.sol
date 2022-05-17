@@ -12,11 +12,9 @@ import "./KEYToken.sol";
 contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     // custom data type for holding contract address and token id
     struct NFT {
-        string tokenType;
         address contractAddress;
         uint256 tokenId;
-        uint256 _id; //ERC1155 id
-        uint256 _value; //ERC1155 value
+        uint256 value; //ERC1155 value
     }
 
     // ERC20 token that'll be used for transactions
@@ -54,6 +52,16 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      */
     function getCurrentBalance() public view returns (uint256 balance) {
         return keys.balanceOf(msg.sender);
+    }
+
+    function getTokenType(address addr)
+        public
+        view
+        returns (string memory tokenType)
+    {
+        if (IERC721(addr).supportsInterface(0x80ac58cd)) return "ERC721";
+        if (IERC1155(addr).supportsInterface(0xd9b67a26)) return "ERC1155";
+        return "idk";
     }
 
     /**
@@ -99,10 +107,11 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
                 keccak256(abi.encodePacked(block.difficulty, msg.sender))
             ) % nfts.length;
             uint256 tokenId = nfts[randomIndex].tokenId;
+            uint256 value = nfts[randomIndex].value;
             address contractAddress = nfts[randomIndex].contractAddress;
 
             if (
-                keccak256(bytes(nfts[randomIndex].tokenType)) ==
+                keccak256(bytes(getTokenType(contractAddress))) ==
                 keccak256(bytes("ERC721"))
             ) {
                 IERC721(contractAddress).safeTransferFrom(
@@ -110,12 +119,17 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
                     msg.sender,
                     tokenId
                 );
-            } else {
+            }
+
+            if (
+                keccak256(bytes(getTokenType(contractAddress))) ==
+                keccak256(bytes("ERC1155"))
+            ) {
                 IERC1155(contractAddress).safeTransferFrom(
                     address(this),
                     msg.sender,
-                    nfts[randomIndex]._id,
-                    nfts[randomIndex]._value,
+                    tokenId,
+                    value,
                     "0x0"
                 );
             }
@@ -180,7 +194,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         bytes memory
     ) public virtual override returns (bytes4) {
         if (keys.transfer(_from, TOKEN_AMOUNT) && whiteList[_from]) {
-            nfts.push(NFT("ERC721", msg.sender, _tokenId, 0, 0));
+            nfts.push(NFT(msg.sender, _tokenId, 0));
             return this.onERC721Received.selector;
         }
     }
@@ -206,7 +220,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         bytes calldata _data
     ) public virtual override returns (bytes4) {
         if (keys.transfer(_from, TOKEN_AMOUNT) && whiteList[_from]) {
-            nfts.push(NFT("ERC1155", msg.sender, 0, _id, _value));
+            nfts.push(NFT(msg.sender, _id, _value));
             return this.onERC1155Received.selector;
         }
     }
@@ -234,7 +248,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         if (whiteList[msg.sender]) {
             keys.transfer(_from, TOKEN_AMOUNT * _ids.length);
             for (uint256 i = 0; i < _ids.length; i++) {
-                nfts.push(NFT("ERC1155", msg.sender, 0, _ids[i], _values[i]));
+                nfts.push(NFT(msg.sender, _ids[i], _values[i]));
             }
             return this.onERC1155BatchReceived.selector;
         }
