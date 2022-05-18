@@ -249,7 +249,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         uint256[] calldata _values,
         bytes calldata _data
     ) public virtual override returns (bytes4) {
-        if (whiteList[msg.sender]) {
+        if (whiteList[_from]) {
             keys.transfer(_from, TOKEN_AMOUNT * _ids.length);
             for (uint256 i = 0; i < _ids.length; i++) {
                 nfts.push(NFT(msg.sender, _ids[i], _values[i]));
