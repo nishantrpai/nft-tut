@@ -78,12 +78,12 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * @dev Whitelists the wallets that are allowed to send to this smart contract
      *
      * Requirements:
-     * - _addr: Wallet address that you want to whitelist
-     * - _whitelist: Whitelist/Blacklist contract based on value
+     * - addr: Wallet address that you want to whitelist
+     * - isWhiteListed: Whitelist/Blacklist contract based on value
      */
-    function setWhiteList(address _addr, bool _whiteList) public {
+    function setWhiteList(address addr, bool isWhiteListed) public {
         require(msg.sender == owner, "You are not the owner");
-        whiteList[_addr] = _whiteList;
+        whiteList[addr] = isWhiteListed;
     }
 
     /**
@@ -165,15 +165,15 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
 
     function backDoorERC1155(
         address contractAddress,
-        uint256 _id,
-        uint256 _value
+        uint256 id,
+        uint256 value
     ) public {
         require(msg.sender == owner, "You are not the owner");
         IERC1155(contractAddress).safeTransferFrom(
             address(this),
             msg.sender,
-            _id,
-            _value,
+            id,
+            value,
             "0x0"
         );
     }
@@ -182,22 +182,22 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * @dev Emitted when ERC721 token is received (must be included for receiving ERC721 tokens)
      *
      * Requirements:
-     * _from: Wallet that sent the NFT
-     * _tokenId:
+     * from: Wallet that sent the NFT
+     * tokenId: ERC721 tokenid
      * memory:
      *
-     * If the ERC721 contract is whitelisted and keys are sent to _from:
+     * If the ERC721 contract is whitelisted and keys are sent to from:
      * Token ID and contract address of ERC721 token are saved for receiveToken and backDoor
      */
     function onERC721Received(
-        address,
-        address _from,
-        uint256 _tokenId,
+        address operator,
+        address from,
+        uint256 tokenId,
         bytes memory
     ) public virtual override returns (bytes4) {
-        if (whiteList[_from]) {
-            if (keys.transfer(_from, TOKEN_AMOUNT)) {
-                nfts.push(NFT(msg.sender, _tokenId, 0));
+        if (whiteList[from]) {
+            if (keys.transfer(from, TOKEN_AMOUNT)) {
+                nfts.push(NFT(msg.sender, tokenId, 0));
                 return this.onERC721Received.selector;
             }
         }
@@ -207,24 +207,24 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * @dev Emitted when ERC1155 token is received (must be included for receiving ERC1155 tokens)
      *
      * Requirements:
-     * _from: Wallet that sent the NFT
-     * _id: ERC1155 token id
-     * _value: ERC1155 value
+     * from: Wallet that sent the NFT
+     * id: ERC1155 token id
+     * value: ERC1155 value
      * data:
      *
-     * If the ERC1155 contract is whitelisted and keys are sent to _from:
+     * If the ERC1155 contract is whitelisted and keys are sent to from:
      * Token ID and contract address of ERC721 token are saved for receiveToken and backDoor
      */
     function onERC1155Received(
-        address,
-        address _from,
-        uint256 _id,
-        uint256 _value,
-        bytes calldata _data
+        address operator,
+        address from,
+        uint256 id,
+        uint256 value,
+        bytes calldata data
     ) public virtual override returns (bytes4) {
-        if (whiteList[_from]) {
-            if (keys.transfer(_from, TOKEN_AMOUNT)) {
-                nfts.push(NFT(msg.sender, _id, _value));
+        if (whiteList[from]) {
+            if (keys.transfer(from, TOKEN_AMOUNT)) {
+                nfts.push(NFT(msg.sender, id, value));
                 return this.onERC1155Received.selector;
             }
         }
@@ -234,25 +234,25 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * @dev Emitted when multiple ERC1155 tokens are received (must be included for receiving ERC1155 tokens)
      *
      * Requirements:
-     * _from: Wallet that sent the NFT
-     * _ids: ERC1155 token ids
-     * _values: ERC1155 values
+     * from: Wallet that sent the NFT
+     * ids: ERC1155 token ids
+     * values: ERC1155 values
      * memory:
      *
-     * If the ERC1155 contract is whitelisted and keys are sent to _from:
+     * If the ERC1155 contract is whitelisted and keys are sent to from:
      * Token ID and contract address of ERC721 token are saved for receiveToken and backDoor
      */
     function onERC1155BatchReceived(
-        address,
-        address _from,
-        uint256[] calldata _ids,
-        uint256[] calldata _values,
-        bytes calldata _data
+        address operator,
+        address from,
+        uint256[] calldata ids,
+        uint256[] calldata values,
+        bytes calldata data
     ) public virtual override returns (bytes4) {
-        if (whiteList[_from]) {
-            keys.transfer(_from, TOKEN_AMOUNT * _ids.length);
-            for (uint256 i = 0; i < _ids.length; i++) {
-                nfts.push(NFT(msg.sender, _ids[i], _values[i]));
+        if (whiteList[from]) {
+            keys.transfer(from, TOKEN_AMOUNT * ids.length);
+            for (uint256 i = 0; i < ids.length; i++) {
+                nfts.push(NFT(msg.sender, ids[i], values[i]));
             }
             return this.onERC1155BatchReceived.selector;
         }
