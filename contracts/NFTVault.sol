@@ -99,7 +99,6 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      */
     function receiveToken(uint256 amount)
         public
-        payable
         returns (bool success)
     {
         require(keys.balanceOf(msg.sender) != 0, "sender cannot have 0 keys");
