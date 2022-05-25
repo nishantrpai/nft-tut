@@ -41,14 +41,14 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     }
 
     /**
-     * @dev Returns the token balance for the vault
+     * @dev Returns the amount of keys in this vault
      */
     function getVaultBalance() public view returns (uint256 balance) {
         return keys.balanceOf(address(this));
     }
 
     /**
-     * @dev Returns the number of tokens in senders account.
+     * @dev Returns the amount of keys in senders account.
      */
     function getCurrentBalance() public view returns (uint256 balance) {
         return keys.balanceOf(msg.sender);
@@ -68,14 +68,14 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     }
 
     /**
-     * @dev Returns the number of tokens in ``owner``'s account.
+     * @dev Returns the address of keys (ERC20 contract) that is deployed
      */
     function getTokenAddr() public view returns (address token) {
         return address(keys);
     }
 
     /**
-     * @dev Whitelists the wallets that are allowed to send to this smart contract
+     * @dev Whitelists the wallets that are allowed to send ERC721/ERC1155 tokens to this contract
      *
      * Requirements:
      * - addr: Wallet address that you want to whitelist
@@ -87,10 +87,10 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     }
 
     /**
-     * @dev Send NFT to the wallet that is calling this function
+     * @dev Send NFT to the wallet (that called) AFTER >=10 keys(ERC20 token) are sent to this function
      *
      * Requirements:
-     * - amount: Amount that is being sent to the smart contract
+     * - amount: Amount of keys (ERC20 token) that is being sent to the smart contract
      *
      * Transfer amount from sender to this contract and a random ERC721 from this contract if:
      * 1. Wallet should have > 0 keys, will fail if there are no keys
@@ -146,13 +146,12 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     }
 
     /**
-     * @dev Owner can use this function for preventing NFTs from getting locked in this contract
+     * @dev Owner can use this function for preventing ERC721 from getting locked in this contract
      *
      * Requirements:
-     * -contractAddress: Contract address of NFT
-     * -tokenId: TokenID of NFT
+     * -contractAddress: Contract address of ERC721 token
+     * -tokenId: TokenID of ERC721
      */
-
     function backDoorERC721(address contractAddress, uint256 tokenId) public {
         require(msg.sender == owner, "You are not the owner");
         IERC721(contractAddress).safeTransferFrom(
@@ -162,6 +161,14 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         );
     }
 
+    /**
+     * @dev Owner can use this function for preventing ERC1155 from getting locked in this contract
+     *
+     * Requirements:
+     * -contractAddress: Contract address of ERC1155 token
+     * -id: token id of ERC1155
+     * -value: amount of tokens (id) you want to send
+     */
     function backDoorERC1155(
         address contractAddress,
         uint256 id,
