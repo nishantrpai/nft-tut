@@ -7,6 +7,7 @@ import "@openzeppelin/contracts/token/ERC1155/IERC1155.sol";
 import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/AccessControl.sol";
+import "hardhat/console.sol";
 import "./KEYToken.sol";
 
 contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
@@ -26,6 +27,12 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     // Amount that is sent when a ERC721 token is received
     uint256 public TOKEN_AMOUNT = 100;
 
+    // Base unit is used for display purposes
+    uint256 public BASE_UNIT = 10 ** 18;
+
+    // Total supply of keys
+    uint256 public TOTAL_SUPPLY = 100000;
+
     // List of ERC721 address and tokenid that are currently in the smart contract
     NFT[] nfts;
 
@@ -36,7 +43,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * @dev Emitted when this contract is deployed
      */
     constructor() public {
-        keys = new KEYToken("KEYS", "KEY", 1000000);
+        keys = new KEYToken("KEYS", "KEY", TOTAL_SUPPLY * BASE_UNIT);
         owner = payable(msg.sender);
     }
 
@@ -103,7 +110,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     {
         require(keys.balanceOf(msg.sender) != 0, "sender cannot have 0 keys");
         require(nfts.length > 0, "there are no NFTs in the contract");
-        require(amount >= 10, "amount must be atleast 10");
+        require((amount/BASE_UNIT) >= 10, "amount must be atleast 10");
         if (keys.transferFrom(msg.sender, address(this), amount)) {
             uint256 randomIndex = uint256(
                 keccak256(abi.encodePacked(block.difficulty, msg.sender))
@@ -202,7 +209,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         bytes memory
     ) public virtual override returns (bytes4) {
         if (whiteList[from]) {
-            if (keys.transfer(from, TOKEN_AMOUNT)) {
+            if (keys.transfer(from, TOKEN_AMOUNT * BASE_UNIT)) {
                 nfts.push(NFT(msg.sender, tokenId, 0));
                 return this.onERC721Received.selector;
             }
@@ -229,7 +236,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         bytes calldata data
     ) public virtual override returns (bytes4) {
         if (whiteList[from]) {
-            if (keys.transfer(from, TOKEN_AMOUNT)) {
+            if (keys.transfer(from, TOKEN_AMOUNT * BASE_UNIT)) {
                 nfts.push(NFT(msg.sender, id, value));
                 return this.onERC1155Received.selector;
             }
@@ -256,7 +263,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         bytes calldata data
     ) public virtual override returns (bytes4) {
         if (whiteList[from]) {
-            keys.transfer(from, TOKEN_AMOUNT * ids.length);
+            keys.transfer(from, TOKEN_AMOUNT * ids.length * BASE_UNIT);
             for (uint256 i = 0; i < ids.length; i++) {
                 nfts.push(NFT(msg.sender, ids[i], values[i]));
             }
