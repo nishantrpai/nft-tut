@@ -334,8 +334,8 @@
       ]
     },
     "/Users/nishantpai/Documents/nft-tu/contracts/NFTVault.sol": {
-      "lastModificationDate": 1653715678630,
-      "contentHash": "524e15a0cccb08a1640b3cfb16eb948a",
+      "lastModificationDate": 1654262035456,
+      "contentHash": "045c58f4b61bb9ee211d3041bc4cf56a",
       "sourceName": "contracts/NFTVault.sol",
       "solcConfig": {
         "version": "0.8.1",
@@ -367,7 +367,6 @@
         "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol",
         "@openzeppelin/contracts/token/ERC1155/ERC1155.sol",
         "@openzeppelin/contracts/access/AccessControl.sol",
-        "hardhat/console.sol",
         "./KEYToken.sol"
       ],
       "versionPragmas": [
