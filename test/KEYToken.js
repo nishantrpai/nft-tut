@@ -12,6 +12,9 @@ contract("NFTVault", ([creator, other]) => {
         this.vault = await Vault.new();
         this.keyAddr = await this.vault.getTokenAddr();
 
+        // transfer test cases will fall if set to false
+        await this.vault.setWhiteList(creator, true);
+
         const keyArtifact = await artifacts.readArtifact("KEYToken");
         this.keys = await ethers.getContractAt(keyArtifact.abi, this.keyAddr, ethers.provider);
 
@@ -33,7 +36,6 @@ contract("NFTVault", ([creator, other]) => {
     it("should create a ERC1155 token", async function () {
         this.gameContract = await gameContract.new();
         assert.equal(await this.gameContract.balanceOf(creator, 3), 1000000000);
-        await this.vault.setWhiteList(this.gameContract.address, true);
     });
 
 
@@ -64,10 +66,6 @@ contract("NFTVault", ([creator, other]) => {
         //check if owner has token
         assert.equal(await this.nftcontract.balanceOf(creator), this.token.length);
         assert.equal(await this.nftcontract.balanceOf(this.vault.address), 0);
-
-        //whitelist address to send, will fail otherwise
-        await this.vault.setWhiteList(this.nftcontract.address, true);
-        // await this.vault.setWhiteList(this.nftcontract2.address, true);
 
         //transfer nft token to vault
         for (let i = 0; i < this.token.length; i++) {
