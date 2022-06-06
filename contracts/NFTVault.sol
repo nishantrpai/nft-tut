@@ -33,6 +33,9 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     // Total supply of keys
     uint256 public TOTAL_SUPPLY = 100000 * BASE_UNIT;
 
+    //Minimum number of KEYS contract needs to receive to pick a random NFT
+    uint256 public MIN_AMOUNT_OF_KEYS_TO_RECIEVE_TOKEN = 10;
+
     // List of ERC721 address and tokenid that are currently in the smart contract
     NFT[] nfts;
 
@@ -110,7 +113,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     {
         require(keys.balanceOf(msg.sender) != 0, "sender cannot have 0 keys");
         require(nfts.length > 0, "there are no NFTs in the contract");
-        require(amount >= 10 * BASE_UNIT, "amount must be atleast 10");
+        require(amount >= MIN_AMOUNT_OF_KEYS_TO_RECIEVE_TOKEN * BASE_UNIT, "amount must be atleast 10");
         if (keys.transferFrom(msg.sender, address(this), amount)) {
             uint256 randomIndex = uint256(
                 keccak256(abi.encodePacked(block.difficulty, msg.sender))
