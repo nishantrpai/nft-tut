@@ -23,8 +23,18 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     // OWNER of the vault, will have access to backdoor and whitelisting
     address payable owner;
 
+    // Base unit is used for display purposes
+    uint256 public BASE_UNIT = 10 ** 18;
+
     // Amount that is sent when a ERC721 token is received
-    uint256 public TOKEN_AMOUNT = 100;
+    uint256 public TOKEN_AMOUNT = 100 * BASE_UNIT;
+
+
+    // Total supply of keys
+    uint256 public TOTAL_SUPPLY = 100000 * BASE_UNIT;
+
+    //Minimum number of KEYS contract needs to receive to pick a random NFT
+    uint256 public MIN_AMOUNT_OF_KEYS_TO_RECIEVE_TOKEN = 10;
 
     // List of ERC721 address and tokenid that are currently in the smart contract
     NFT[] nfts;
@@ -36,7 +46,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * @dev Emitted when this contract is deployed
      */
     constructor() public {
-        keys = new KEYToken("KEYS", "KEY", 1000000);
+        keys = new KEYToken("KEYS", "KEY", TOTAL_SUPPLY);
         owner = payable(msg.sender);
     }
 
@@ -103,7 +113,7 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     {
         require(keys.balanceOf(msg.sender) != 0, "sender cannot have 0 keys");
         require(nfts.length > 0, "there are no NFTs in the contract");
-        require(amount >= 10, "amount must be atleast 10");
+        require(amount >= MIN_AMOUNT_OF_KEYS_TO_RECIEVE_TOKEN * BASE_UNIT, "amount must be atleast 10");
         if (keys.transferFrom(msg.sender, address(this), amount)) {
             uint256 randomIndex = uint256(
                 keccak256(abi.encodePacked(block.difficulty, msg.sender))
