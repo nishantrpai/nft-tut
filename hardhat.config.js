@@ -15,6 +15,9 @@ module.exports = {
     rinkeby: {
       url: API_URL,
       accounts: [`0x${PRIVATE_KEY}`],
+      gas: "auto",
+      gasPrice: "auto",
+      gasLimit: "auto"
     }
   },
   etherscan: {

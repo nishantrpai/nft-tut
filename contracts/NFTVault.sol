@@ -24,11 +24,10 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
     address payable owner;
 
     // Base unit is used for display purposes
-    uint256 public BASE_UNIT = 10 ** 18;
+    uint256 public BASE_UNIT = 10**18;
 
     // Amount that is sent when a ERC721 token is received
     uint256 public TOKEN_AMOUNT = 100 * BASE_UNIT;
-
 
     // Total supply of keys
     uint256 public TOTAL_SUPPLY = 100000 * BASE_UNIT;
@@ -96,6 +95,15 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         whiteList[addr] = isWhiteListed;
     }
 
+    function getNFTs() public view returns (NFT[] memory) {
+        NFT[] memory arr = new NFT[](nfts.length);
+        for (uint256 i = 0; i < nfts.length; i++) {
+            NFT storage nft = nfts[i];
+            arr[i] = nft;
+        }
+        return arr;
+    }
+
     /**
      * @dev Send NFT to the wallet (that called) AFTER >=10 keys(ERC20 token) are sent to this function
      *
@@ -107,13 +115,13 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
      * 2. NFTs in the this contract should be > 0, will fail if there are no NFTs
      * 3. Amount that is being sent to the smart should be exactly 10, will failif the amount is not equal to 10
      */
-    function receiveToken(uint256 amount)
-        public
-        returns (bool success)
-    {
+    function receiveToken(uint256 amount) public returns (bool success) {
         require(keys.balanceOf(msg.sender) != 0, "sender cannot have 0 keys");
         require(nfts.length > 0, "there are no NFTs in the contract");
-        require(amount >= MIN_AMOUNT_OF_KEYS_TO_RECIEVE_TOKEN * BASE_UNIT, "amount must be atleast 10");
+        require(
+            amount >= MIN_AMOUNT_OF_KEYS_TO_RECIEVE_TOKEN * BASE_UNIT,
+            "amount must be atleast 10"
+        );
         if (keys.transferFrom(msg.sender, address(this), amount)) {
             uint256 randomIndex = uint256(
                 keccak256(abi.encodePacked(block.difficulty, msg.sender))
