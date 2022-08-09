@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/nishantpai/Documents/nft-tut/contracts/MyNFT.sol": {
-      "lastModificationDate": 1660028375836,
-      "contentHash": "a7851b48d3ffd096ac67a3999b78defc",
+      "lastModificationDate": 1660029769210,
+      "contentHash": "74680bab73abd04e66fef6ea794bafcb",
       "sourceName": "contracts/MyNFT.sol",
       "solcConfig": {
         "version": "0.8.1",
@@ -32,8 +32,7 @@
         "@openzeppelin/contracts/token/ERC721/ERC721.sol",
         "@openzeppelin/contracts/utils/Counters.sol",
         "@openzeppelin/contracts/access/Ownable.sol",
-        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol",
-        "hardhat/console.sol"
+        "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol"
       ],
       "versionPragmas": [
         "^0.8.0"
@@ -480,41 +479,6 @@
       ],
       "artifacts": [
         "IERC165"
-      ]
-    },
-    "/Users/nishantpai/Documents/nft-tut/node_modules/hardhat/console.sol": {
-      "lastModificationDate": 1659973806753,
-      "contentHash": "cc4777addd464ea56fa35b1c45df0591",
-      "sourceName": "hardhat/console.sol",
-      "solcConfig": {
-        "version": "0.8.1",
-        "settings": {
-          "optimizer": {
-            "enabled": false,
-            "runs": 200
-          },
-          "outputSelection": {
-            "*": {
-              "*": [
-                "abi",
-                "evm.bytecode",
-                "evm.deployedBytecode",
-                "evm.methodIdentifiers",
-                "metadata"
-              ],
-              "": [
-                "ast"
-              ]
-            }
-          }
-        }
-      },
-      "imports": [],
-      "versionPragmas": [
-        ">=0.4.22 <0.9.0"
-      ],
-      "artifacts": [
-        "console"
       ]
     }
   }

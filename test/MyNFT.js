@@ -1,5 +1,5 @@
 const MyNFT = artifacts.require("../contracts/MyNFT.sol");
-const metadata = require("./metadata.json");
+const metadata = 
 
 // Traditional Truffle test
 contract("MyNFT", (accounts) => {
@@ -10,9 +10,8 @@ contract("MyNFT", (accounts) => {
     let currentBalance = await nftcontract.balanceOf(account);
     assert.equal(currentBalance, 0);
 
-    console.log(await nftcontract.signCard("nishantpai"));
-    console.log(await nftcontract.signCard("warren"));
-    console.log(await nftcontract.getSigners());
+    await nftcontract.signCard("nishantpai");
+    await nftcontract.signCard("warren");
     //check balance
     // mint nft
     await nftcontract.mintNFT(account, metadata);

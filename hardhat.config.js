@@ -1,10 +1,11 @@
 /**
-* @type import('hardhat/config').HardhatUserConfig
-*/
-require('dotenv').config();
+ * @type import('hardhat/config').HardhatUserConfig
+ */
+require("dotenv").config();
 require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-truffle5");
-const { API_URL, PRIVATE_KEY } = process.env;
+require("@nomiclabs/hardhat-etherscan");
+const { API_URL, PRIVATE_KEY, ETHERSCAN_API_KEY } = process.env;
 module.exports = {
   solidity: "0.8.1",
   defaultNetwork: "rinkeby",
@@ -12,7 +13,12 @@ module.exports = {
     hardhat: {},
     rinkeby: {
       url: API_URL,
-      accounts: [`0x${PRIVATE_KEY}`]
-    }
+      accounts: [`0x${PRIVATE_KEY}`],
+    },
   },
-}
+  etherscan: {
+    apiKey: {
+      rinkeby: ETHERSCAN_API_KEY,
+    },
+  },
+};
