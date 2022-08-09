@@ -1,32 +1,24 @@
 const MyNFT = artifacts.require("../contracts/MyNFT.sol");
+const metadata = require("./metadata.json");
 
 // Traditional Truffle test
 contract("MyNFT", (accounts) => {
-    it("Should initialize nft", async function () {
-        //initalize
-        let account = accounts[0];
-        const nftcontract = await MyNFT.new();
-        let currentBalance = await nftcontract.balanceAddr(account);
-        let numberOfTokensLeft = await nftcontract.numberOfTokensLeft();
+  it("Should initialize nft", async function () {
+    //initalize
+    let account = accounts[0];
+    const nftcontract = await MyNFT.new();
+    let currentBalance = await nftcontract.balanceOf(account);
+    assert.equal(currentBalance, 0);
 
-        console.log(currentBalance.toString(10), numberOfTokensLeft.toString(10));
-        //check balance
-        assert.equal(currentBalance, 2);
-        //check number of tokens
-        assert.equal(numberOfTokensLeft, 10);
+    console.log(await nftcontract.signCard("nishantpai"));
+    console.log(await nftcontract.signCard("warren"));
+    console.log(await nftcontract.getSigners());
+    //check balance
+    // mint nft
+    await nftcontract.mintNFT(account, metadata);
 
-        // mint nft
-        await nftcontract.mintNFT(account, "ipfs://QmQc4SpF3tMQgP5CCxtoaFtJJTTT8h4CjdSN4X9iFMCxoF")
+    currentBalance = await nftcontract.balanceOf(account);
 
-        currentBalance = await nftcontract.balanceAddr(account);
-        numberOfTokensLeft = await nftcontract.numberOfTokensLeft();
-
-        console.log(currentBalance.toString(10), numberOfTokensLeft.toString(10));
-        //check balance
-        assert.equal(currentBalance, 1);
-        //check number of tokens
-        assert.equal(numberOfTokensLeft, 9);
-    });
-
+    assert.equal(currentBalance, 1);
+  });
 });
-
