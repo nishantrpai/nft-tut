@@ -73,7 +73,7 @@ contract WriteSVG {
 			LETTER_WIDTHS["W"] = 5;
     }
 
-		function upperCase(string memory text, uint256 i) internal returns (string memory) {
+		function upperCase(string memory text, uint256 i) internal pure returns (string memory) {
 			bytes memory firstCharByte = new bytes(1);
 			firstCharByte[0] = bytes(text)[i];
 			uint8 decimal = uint8(firstCharByte[0]);
@@ -81,7 +81,7 @@ contract WriteSVG {
 			return 	string(firstCharByte);
 		}
 
-    function write(string memory text, string memory color, uint256 spacing, uint256 y) public returns (string memory) {
+    function write(string memory text, string memory color, uint256 spacing, uint256 y) view public returns (string memory) {
 			uint256 letterPos = 0;
 			string memory letters = "";
 
