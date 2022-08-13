@@ -1,12 +1,4 @@
 const Present = artifacts.require("../contracts/Present.sol");
-const imageToBase64 = require("image-to-base64");
-const base64json = require("base64json");
-const metadata = {
-  name: "Happy Birthday Jack",
-  description: "Happy birthday Jack - vv",
-  attributes: [{ trait_type: "Type", value: "Normal" }],
-  image: "",
-};
 
 // Traditional Truffle test
 contract("Present", (accounts) => {
@@ -20,13 +12,13 @@ contract("Present", (accounts) => {
   it("Should initialize sign NFTs", async function () {
     await this.nftcontract.signCard("nishu");
   });
+  
+  // it("Should initialize mint NFT", async function () {
+  //   await this.nftcontract.mintNFT(this.account);
+  //   // await this.nftcontract.mintNFT(this.account);
+  //   // await this.nftcontract.signCard("nishu".toUpperCase());
 
-  it("Should initialize mint NFT", async function () {
-    await this.nftcontract.mintNFT(this.account);
-    // await this.nftcontract.mintNFT(this.account);
-    // await this.nftcontract.signCard("nishu".toUpperCase());
-
-    let currentBalance = await this.nftcontract.balanceOf(this.account);
-    assert.equal(currentBalance, 1);
-  });
+  //   let currentBalance = await this.nftcontract.balanceOf(this.account);
+  //   assert.equal(currentBalance, 1);
+  // });
 });

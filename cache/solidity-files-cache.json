@@ -2,8 +2,8 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/nishantpai/Documents/nft-tut/contracts/Present.sol": {
-      "lastModificationDate": 1660390635760,
-      "contentHash": "dec55f08e41d583719d089d239b1e4e7",
+      "lastModificationDate": 1660394497708,
+      "contentHash": "109c7ab2b5e5e79b2172c7cdfd20ca11",
       "sourceName": "contracts/Present.sol",
       "solcConfig": {
         "version": "0.8.1",
@@ -303,8 +303,8 @@
       ]
     },
     "/Users/nishantpai/Documents/nft-tut/contracts/WriteSVG.sol": {
-      "lastModificationDate": 1660391523677,
-      "contentHash": "ca12444348b67438f25e58a15ea2a786",
+      "lastModificationDate": 1660391796531,
+      "contentHash": "554e303780e0069606fa9baa3e7800fc",
       "sourceName": "contracts/WriteSVG.sol",
       "solcConfig": {
         "version": "0.8.1",
