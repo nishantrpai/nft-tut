@@ -4,8 +4,8 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 
 contract WriteSVG {
-    mapping(string => string) public LETTERS;
-    mapping(string => uint256) public LETTER_WIDTHS;
+    mapping(string => string) private LETTERS;
+    mapping(string => uint256) private LETTER_WIDTHS;
 
     constructor() {
         LETTERS["0"] = "<path d='M1 1H2L2 4H1L1 1ZM1 1H0V4H1L1 5H2L2 4H3L3 1H2L2 0H1L1 1Z'/>";

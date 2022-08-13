@@ -23,6 +23,9 @@ contract("Present", (accounts) => {
 
   it("Should initialize mint NFT", async function () {
     await this.nftcontract.mintNFT(this.account);
+    // await this.nftcontract.mintNFT(this.account);
+    // await this.nftcontract.signCard("nishu".toUpperCase());
+
     let currentBalance = await this.nftcontract.balanceOf(this.account);
     assert.equal(currentBalance, 1);
   });
