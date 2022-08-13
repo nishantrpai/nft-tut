@@ -51,7 +51,7 @@ contract Present is ERC721URIStorage, Ownable, WriteSVG {
         require(!signed[msg.sender], "One-sign/Person");
         require(!(bytes(name).length <= 0), "Min chars 1");
         require(!(bytes(name).length >= 10), "Max chars 10");
-        require(!NFTGifted, "NFT has been gifted");
+        require(block.timestamp <= 1660453200, "Jack's Birthday is over");
         require(!hasSpace(name),"No spaces");
         signatures = string(abi.encodePacked(signatures,signSVG(name)));
         signed[msg.sender] = true;
