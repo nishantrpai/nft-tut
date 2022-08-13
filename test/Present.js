@@ -18,23 +18,12 @@ contract("Present", (accounts) => {
   });
 
   it("Should initialize sign NFTs", async function () {
-    await this.nftcontract.signCard("nishu");
-    await this.nftcontract.signCard("warren");
-    await this.nftcontract.signCard("nishu");
-    await this.nftcontract.signCard("nishu");
-    await this.nftcontract.signCard("nishu");
-    await this.nftcontract.signCard("nishu");
-    await this.nftcontract.signCard("nishu");
-    await this.nftcontract.signCard("nishu");
-    await this.nftcontract.tokenURI();
+    await this.nftcontract.signCard("nishu".toUpperCase());
   });
 
-  // it("Should initialize mint NFT", async function () {
-  //   await this.nftcontract.mintNFT(this.account, tokenURI);
-  // });
-
-  // it("Balance should be equal to 1", async function () {
-  //   currentBalance = await this.nftcontract.balanceOf(this.account);
-  //   assert.equal(currentBalance, 1);
-  // });
+  it("Should initialize mint NFT", async function () {
+    await this.nftcontract.mintNFT(this.account);
+    let currentBalance = await this.nftcontract.balanceOf(this.account);
+    assert.equal(currentBalance, 1);
+  });
 });
