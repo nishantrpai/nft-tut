@@ -5,6 +5,7 @@ require("dotenv").config();
 require("@nomiclabs/hardhat-ethers");
 require("@nomiclabs/hardhat-truffle5");
 require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-waffle");
 const { API_URL, PRIVATE_KEY, ETHERSCAN_API_KEY } = process.env;
 module.exports = {
   solidity: "0.8.1",
