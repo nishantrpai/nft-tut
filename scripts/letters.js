@@ -100,9 +100,9 @@ const write = (text, color = 'black', spacing = 1) => {
 
 // console.log(write('nishu','#333'));
 log = ''
-for(letter in Object.keys(LETTER_WIDTHS)){ 
-  let char = Object.keys(LETTER_WIDTHS)[letter];
-  log += `widths['${char}'] = ${LETTER_WIDTHS[char]};\n`;
+for(letter in Object.keys(LETTERS)){ 
+  let char = Object.keys(LETTERS)[letter];
+  char.match(/[A-Z]/i) ? log += `LETTERS["${char.toLowerCase()}"] = "${LETTERS[char]}";\n` : '';
 }
 
 console.log(log);
