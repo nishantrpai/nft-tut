@@ -6,21 +6,18 @@ contract("Present", (accounts) => {
     const Present = await ethers.getContractFactory("Present");
     this.nftcontract = await Present.deploy();
 
-    await expect(this.nftcontract.tokenURI(1))
-      .to.be.revertedWith(`This isn't Jacks birthday`)
-
-    // await expect(this.nftcontract.tokenURI(34)).not.to.be.reverted()
+    // await expect(this.nftcontract.tokenURI(1))
+    //   .to.be.revertedWith(`This isn't Jacks birthday`)
   });
 
   it("Should initialize sign NFTs", async function () {
     // console.log(await this.nftcontract.tokenURI(34));
-    const [nishu, jalil, warren, ian] = await ethers.getSigners();
-    await this.nftcontract.connect(nishu).signCard("nishu");
-    await this.nftcontract.connect(jalil).signCard("jalil");
-    await this.nftcontract.connect(warren).signCard("warren");
-    await this.nftcontract.connect(ian).signCard("ian");
-    console.log(await this.nftcontract.tokenURI(34));
-    // expect(await this.nftcontract.tokenURI(34)).to.equal(`data:application/json;base64,eyJuYW1lIjogIkhCRCBKQ0siLCJpbWFnZSI6ICJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIyYVdWM1FtOTRQU2N3SURBZ01UQXdJREU0TUNjZ2QybGtkR2c5SnpVd01DY2dlRzFzYm5NOUoyaDBkSEE2THk5M2QzY3Vkek11YjNKbkx6SXdNREF2YzNabkp6NDhjbVZqZENCNFBTY3dKeUI1UFNjd0p5QjNhV1IwYUQwbk1UQXdKU2NnYUdWcFoyaDBQU2N4TURBbEp5Qm1hV3hzUFNjak1EQXdKeTgrUEdjZ2RISmhibk5tYjNKdFBTZHpZMkZzWlNneEtTQjBjbUZ1YzJ4aGRHVW9ORFF1TlN3Z05EQXBKeUJtYVd4c1BTY2pabVptSnlCbWFXeHNMWEoxYkdVOUoyVjJaVzV2WkdRbklHTnNhWEF0Y25Wc1pUMG5aWFpsYm05a1pDY2dZWEpwWVMxc1lXSmxiRDBuU0VKRUp6NDhaeUIwY21GdWMyWnZjbTA5SjNSeVlXNXpiR0YwWlNnd0tTYytQSEJoZEdnZ1pEMG5UVEFnTUVneFRERWdNa2d5VmpCSU0xWXlWak5XTlVneVZqTklNVlkxU0RCV01Gb25MejQ4TDJjK1BHY2dkSEpoYm5ObWIzSnRQU2QwY21GdWMyeGhkR1VvTkNrblBqeHdZWFJvSUdROUowMHhJREJJTUZZMVNERklNa2d6VmpOSU1sWXlTRE5XTUVneVNERmFUVElnTWtneFZqRklNbFl5V2sweUlEUldNMGd4VmpSSU1sb25MejQ4TDJjK1BHY2dkSEpoYm5ObWIzSnRQU2QwY21GdWMyeGhkR1VvT0NrblBqeHdZWFJvSUdROUowMHdJREZXTkZZMVNERklNa2d6VmpGSU1sWXdTREZJTUZZeFdrMHlJRFJXTVV3eElERldORWd5V2ljdlBqd3ZaejQ4TDJjK1BHY2dkSEpoYm5ObWIzSnRQU2R6WTJGc1pTZ3hLU0IwY21GdWMyeGhkR1VvTkRJc0lEVXdLU2NnWm1sc2JEMG5JMlptWmljZ1ptbHNiQzF5ZFd4bFBTZGxkbVZ1YjJSa0p5QmpiR2x3TFhKMWJHVTlKMlYyWlc1dlpHUW5JR0Z5YVdFdGJHRmlaV3c5SjBwQlEwc25QanhuSUhSeVlXNXpabTl5YlQwbmRISmhibk5zWVhSbEtEQXBKejQ4WnlCMGNtRnVjMlp2Y20wOUozUnlZVzV6YkdGMFpTZ3dLU2MrUEhCaGRHZ2daRDBuVFRBZ01FZ3lTRE5XTVZZMFZqVklNa2d4U0RCV05GWXpTREZXTkVneVZqRk1NQ0F4VmpCYUp5OCtQQzluUGp4bklIUnlZVzV6Wm05eWJUMG5kSEpoYm5Oc1lYUmxLRFFwSno0OGNHRjBhQ0JrUFNkTk1DQXpWalZJTVZZelRESWdNMVkxU0ROV00xWXlWakZXTUVneVNERklNRll4VmpKV00xcE5NU0F5U0RKV01VZ3hWakphSnk4K1BDOW5QanhuSUhSeVlXNXpabTl5YlQwbmRISmhibk5zWVhSbEtEZ3BKejQ4Y0dGMGFDQmtQU2ROTUNBd1NERklNMVl4VERFZ01WWTBTRE5XTlVneFNEQldORll4VmpCYUp5OCtQQzluUGp4bklIUnlZVzV6Wm05eWJUMG5kSEpoYm5Oc1lYUmxLREV5S1NjK1BIQmhkR2dnWkQwblRURWdNRWd3VmpKV00xWTFTREZXTTBneVZqVklNMHd6SUROSU1sWXlTRE5NTXlBd1NESk1NaUF5U0RGV01Gb25MejQ4TDJjK1BHY2dkSEpoYm5ObWIzSnRQU2QwY21GdWMyeGhkR1VvTVRZcEp6NDhjR0YwYUNCa1BTZE5NQ0F6U0RGTU1TQXdTREJXTTFwTk1DQTFTREZNTVNBMFNEQldOVm9uTHo0OEwyYytQQzluUGp3dlp6NDhaeUFnZEhKaGJuTm1iM0p0UFNkelkyRnNaU2d3TGpVcElIUnlZVzV6YkdGMFpTZzVNQ3d4TWpBcEp5Qm1hV3hzUFNjak9UazVKeUJtYVd4c0xYSjFiR1U5SjJWMlpXNXZaR1FuSUdOc2FYQXRjblZzWlQwblpYWmxibTlrWkNjZ1lYSnBZUzFzWVdKbGJEMG5ibWx6YUhVblBqeG5JSFJ5WVc1elptOXliVDBuZEhKaGJuTnNZWFJsS0RBcEp6NDhjR0YwYUNCa1BTZE5NQ0F3U0RGV05VZ3dWakJhSUUweElERklNbFl6U0RGV01Wb2dUVElnTWtnelZqUklNbFl5V2lCTk15QXdTRFJXTlVnelZqQmFKeTgrUEM5blBqeG5JSFJ5WVc1elptOXliVDBuZEhKaGJuTnNZWFJsS0RVcEp6NDhjR0YwYUNCa1BTZE5NQ0F4VmpCSU1VZ3lTRE5XTVV3eUlERldORWd6VmpWSU1rZ3hTREJXTkVneFZqRk1NQ0F4V2ljdlBqd3ZaejQ4WnlCMGNtRnVjMlp2Y20wOUozUnlZVzV6YkdGMFpTZzVLU2MrUEhCaGRHZ2daRDBuVFRFZ00wZ3dWakJJTVVnelRETWdNVXd4SURGTU1TQXlURElnTWtnelRETWdNMHd6SURSV05VZ3lTREJXTkV3eUlEUk1NaUF6VERFZ00xb25MejQ4TDJjK1BHY2dkSEpoYm5ObWIzSnRQU2QwY21GdWMyeGhkR1VvTVRNcEp6NDhjR0YwYUNCa1BTZE5NQ0F3U0RGTU1TQXlTREpXTUVnelZqSldNMVkxU0RKV00wZ3hWalZJTUZZd1dpY3ZQand2Wno0OFp5QjBjbUZ1YzJadmNtMDlKM1J5WVc1emJHRjBaU2d4TnlrblBqeHdZWFJvSUdROUowMHhJRFZJTUZZMFZqQklNVXd4SURSTU1pQTBURElnTUVnelRETWdORlkxU0RKSU1Wb25MejQ4TDJjK1BDOW5Qand2YzNablBnPT0iLCJkZXNjcmlwdGlvbiI6ICJIYXBweSBCaXJ0aGRheSBKYWNrIC0gVlYifQ==`)
+    // const [nishu, jalil, warren, ian] = await ethers.getSigners();
+    // await this.nftcontract.connect(nishu).signCard("nishu");
+    // await this.nftcontract.connect(jalil).signCard("jalil");
+    // await this.nftcontract.connect(warren).signCard("warren");
+    // await this.nftcontract.connect(ian).signCard("ian");
+    // console.log(await this.nftcontract.tokenURI(34));
   });
   
 });
