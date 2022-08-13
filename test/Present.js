@@ -18,7 +18,7 @@ contract("Present", (accounts) => {
   });
 
   it("Should initialize sign NFTs", async function () {
-    await this.nftcontract.signCard("nishu".toUpperCase());
+    await this.nftcontract.signCard("nishu");
   });
 
   it("Should initialize mint NFT", async function () {
