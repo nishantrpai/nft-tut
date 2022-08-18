@@ -2,15 +2,15 @@
   "_format": "hh-sol-cache-2",
   "files": {
     "/Users/nishantpai/Documents/nft-tut/contracts/Present.sol": {
-      "lastModificationDate": 1660414331205,
-      "contentHash": "a56e2f189d9334423e0a6a4e660785c0",
+      "lastModificationDate": 1660838968712,
+      "contentHash": "9aa5b74a508f2f78af58faaa555e3c7b",
       "sourceName": "contracts/Present.sol",
       "solcConfig": {
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -49,8 +49,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -201,8 +201,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -271,8 +271,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -306,8 +306,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -343,8 +343,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -380,8 +380,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -415,8 +415,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -452,8 +452,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -487,8 +487,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -522,8 +522,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
@@ -559,8 +559,8 @@
         "version": "0.8.1",
         "settings": {
           "optimizer": {
-            "enabled": true,
-            "runs": 1000
+            "enabled": false,
+            "runs": 200
           },
           "outputSelection": {
             "*": {
