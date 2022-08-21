@@ -126,30 +126,27 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
             uint256 randomIndex = uint256(
                 keccak256(abi.encodePacked(block.difficulty, msg.sender))
             ) % nfts.length;
-            uint256 tokenId = nfts[randomIndex].tokenId;
-            uint256 value = nfts[randomIndex].value;
-            address contractAddress = nfts[randomIndex].contractAddress;
 
             if (
-                keccak256(bytes(getTokenType(contractAddress))) ==
+                keccak256(bytes(getTokenType(nfts[randomIndex].contractAddress))) ==
                 keccak256(bytes("ERC721"))
             ) {
-                IERC721(contractAddress).safeTransferFrom(
+                IERC721(nfts[randomIndex].contractAddress).safeTransferFrom(
                     address(this),
                     msg.sender,
-                    tokenId
+                    nfts[randomIndex].tokenId
                 );
             }
 
             if (
-                keccak256(bytes(getTokenType(contractAddress))) ==
+                keccak256(bytes(getTokenType(nfts[randomIndex].contractAddress))) ==
                 keccak256(bytes("ERC1155"))
             ) {
-                IERC1155(contractAddress).safeTransferFrom(
+                IERC1155(nfts[randomIndex].contractAddress).safeTransferFrom(
                     address(this),
                     msg.sender,
-                    tokenId,
-                    value,
+                    nfts[randomIndex].tokenId,
+                    nfts[randomIndex].value,
                     "0x0"
                 );
             }
