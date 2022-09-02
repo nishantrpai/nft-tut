@@ -243,11 +243,10 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         uint256 value,
         bytes calldata data
     ) public virtual override returns (bytes4) {
-        if (whiteList[from]) {
-            if (keys.transfer(from, TOKEN_AMOUNT)) {
-                nfts.push(NFT(msg.sender, id, value));
-                return this.onERC1155Received.selector;
-            }
+        require(whiteList[from], "Address not whitelisted");
+        if (keys.transfer(from, TOKEN_AMOUNT)) {
+            nfts.push(NFT(msg.sender, id, value));
+            return this.onERC1155Received.selector;
         }
     }
 
@@ -270,12 +269,11 @@ contract NFTVault is IERC721Receiver, IERC1155Receiver, AccessControl {
         uint256[] calldata values,
         bytes calldata data
     ) public virtual override returns (bytes4) {
-        if (whiteList[from]) {
-            keys.transfer(from, TOKEN_AMOUNT * ids.length);
-            for (uint256 i = 0; i < ids.length; i++) {
-                nfts.push(NFT(msg.sender, ids[i], values[i]));
-            }
-            return this.onERC1155BatchReceived.selector;
+        require(whiteList[from], "Address not whitelisted");
+        keys.transfer(from, TOKEN_AMOUNT * ids.length);
+        for (uint256 i = 0; i < ids.length; i++) {
+            nfts.push(NFT(msg.sender, ids[i], values[i]));
         }
+        return this.onERC1155BatchReceived.selector;
     }
 }
